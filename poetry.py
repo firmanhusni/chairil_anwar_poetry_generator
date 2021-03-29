@@ -3,13 +3,16 @@ def poetry_gen(input_text, num_words):
     from tensorflow.keras.preprocessing.sequence import pad_sequences
     from tensorflow.keras.preprocessing.text import Tokenizer
     import numpy as np 
+    import os
     
-    file = "file_location/chairil_anwar.txt"
+    path = os.path.dirname(__file__)
+    file = path + "/chairil_anwar.txt"
+    savedmodel = path + "/saved_model.ckpt"
     tokenizer = Tokenizer()
     data = open(file).read()
     corpus = data.lower().split("\n")
     tokenizer.fit_on_texts(corpus)
-    total_words = len(tokenizer.word_index) + 1
+    #total_words = len(tokenizer.word_index) + 1
     
     input_sequences = []
     for line in corpus:
@@ -23,7 +26,7 @@ def poetry_gen(input_text, num_words):
     input_sequences = np.array(pad_sequences(input_sequences, maxlen=max_sequence_len, padding='pre'))
     
     # Load model from trained model with 100 epoch
-    model = tf.keras.models.load_model("folder_location/saved_model.ckpt")
+    model = tf.keras.models.load_model(savedmodel)
           
     for _ in range(num_words):
     	token_list = tokenizer.texts_to_sequences([input_text])[0]
